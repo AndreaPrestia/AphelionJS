@@ -1,0 +1,12 @@
+{
+  "name": "aphelion-js",
+  "version": "0.0.0",
+  "description": "AphelionJS",
+  "main": "server.js",
+  "author": {
+    "name": ""
+  },
+  "dependencies": {
+    "jsonwebtoken": "^8.5.1"
+  }
+}
