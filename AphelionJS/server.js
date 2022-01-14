@@ -1,7 +1,6 @@
 'use strict';
 
-const Aphelion = require('./aphelion');
+const aphelion = require('./aphelion');
 
-const aphelion = new Aphelion();
+aphelion(3000);
 
-aphelion.useAphelion();

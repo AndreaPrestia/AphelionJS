@@ -132,4 +132,5 @@ class Aphelion {
     };
 }
 
-module.exports = Aphelion;
+module.exports = (port) => new Aphelion().useAphelion(port);
+
