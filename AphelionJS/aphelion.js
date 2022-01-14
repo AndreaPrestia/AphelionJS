@@ -1,7 +1,6 @@
 'use strict';
 
 const http = require('http');
-const port = process.env.PORT || 1337;
 const jwt = require("jsonwebtoken");
 
 const SecurityError = require('./errors/securityError');
@@ -15,9 +14,9 @@ let _configuration = null;
 let _firstRun = true;
 
 class Aphelion {
-    useAphelion = () => http.createServer(async (req, res) => {
+    useAphelion = (port) => http.createServer(async (req, res) => {
         await this.#process(req, res).catch(error => console.log(error));
-    }).listen(port);
+    }).listen(port || process.env.PORT || 1337);
 
     #getResource = (url, method) => {
         let resource = _configuration.resources.find(x => x.url === url && x.method === method);
