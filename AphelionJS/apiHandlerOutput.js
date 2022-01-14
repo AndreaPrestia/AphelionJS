@@ -12,9 +12,7 @@ class ApiHandlerOutput {
     get CacheEnabled() { return this.#cacheEnabled; }
 
     set Content(value) {
-        ValidatorHelper.validateString(value, false);
-
-        this.#content = value;
+        this.#content = value ? JSON.stringify(value) : '';
     }
 
     set StatusCode(value) {
@@ -35,16 +33,27 @@ class ApiHandlerOutput {
         this.#cacheEnabled = value;
     }
 
-    constructor(content, statusCode, contentType, cacheEnabled) {
-        ValidatorHelper.validateString(content, false);
-        ValidatorHelper.validateNumber(statusCode);
-        ValidatorHelper.validateString(contentType);
-        ValidatorHelper.validateBoolean(cacheEnabled);
+    /**
+     * 
+     * @param {any} content
+     * @param {number} statusCode
+     * @param {string} contentType
+     * @param {boolean} cacheEnabled
+     */
+    constructor(content, statusCode = 200, contentType = "application/json", cacheEnabled = false) {
+        if (statusCode)
+            ValidatorHelper.validateNumber(statusCode);
 
-        this.#content = content;
+        if (contentType)
+            ValidatorHelper.validateString(contentType);
+
+        if (cacheEnabled !== null && cacheEnabled !== undefined)
+            ValidatorHelper.validateBoolean(cacheEnabled);
+
+        this.#content = content ? JSON.stringify(content) : '';
         this.#statusCode = statusCode;
         this.#contentType = contentType;
-        this.#cacheEnabled;
+        this.#cacheEnabled = cacheEnabled;
     }
 }
 

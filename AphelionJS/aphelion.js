@@ -2,18 +2,22 @@
 
 const http = require('http');
 const jwt = require("jsonwebtoken");
+const fs = require('fs');
 
 const SecurityError = require('./errors/securityError');
 const ResourceNotFoundError = require('./errors/resourceNotFoundError');
 const ApiHandlerBase = require('./apiHandlerBase');
-
-const fs = require('fs');
+const ApiHandlerOutput = require('./apiHandlerOutput');
 
 let _configuration = null;
 
 let _firstRun = true;
 
 class Aphelion {
+    /**
+     * 
+     * @param {number} port
+     */
     useAphelion = (port) => http.createServer(async (req, res) => {
         await this.#process(req, res).catch(error => console.log(error));
     }).listen(port || process.env.PORT || 1337);
@@ -43,7 +47,7 @@ class Aphelion {
         let contentType = "application/json"
 
         try {
-            const resource = this.#getResource(req.url, req.method);
+            const resource = this.#getResource(req.url.split('?')[0], req.method);
 
             if (!resource) {
                 throw new ResourceNotFoundError(`Resource ${req.url} ${req.method} NOT found.`);
@@ -76,6 +80,10 @@ class Aphelion {
             const apiInstance = Object.create(api.prototype);
 
             apiResult = await apiInstance.process(req);
+
+            if (!api.prototype instanceof ApiHandlerOutput) {
+                throw new Error('API result must be of type ApiHandlerOutput');
+            }
 
             statusCode = apiResult.StatusCode;
 

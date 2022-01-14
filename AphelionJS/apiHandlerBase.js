@@ -1,4 +1,6 @@
-const ApiHandlerOutput = require("./apiHandlerOutput");
+const url = require('url');
+const http = require('http');
+const ValidatorHelper = require('./helpers/validatorHelper');
 
 class ApiHandlerBase {
 
@@ -6,7 +8,13 @@ class ApiHandlerBase {
         throw new Error('You have to implement an extension of ApiHandlerBase!');
     }
 
-    async deserializeInput(req) {
+    /**
+     * 
+     * @param {http.IncomingMessage} req
+     */
+    async getBody(req) {
+        ValidatorHelper.validateObject(req, http.IncomingMessage.name);
+
         const buffers = [];
 
         for await (const chunk of req) {
@@ -18,8 +26,24 @@ class ApiHandlerBase {
         return JSON.parse(data);
     }
 
-    getOutput(content, statusCode = 200, contentType = "application/json", cacheEnabled = false) {
-        return new ApiHandlerOutput(JSON.stringify(content), statusCode, contentType, cacheEnabled);
+    /**
+     * 
+     * @param {http.IncomingMessage} req
+     * @param {string} key
+     * @param {boolean} isMandatory
+     */
+    getParameter(req, key, isMandatory = true) {
+        ValidatorHelper.validateObject(req, http.IncomingMessage.name);
+
+        ValidatorHelper.validateString(key);
+
+        const parameterValue = url.parse(req.url, true).query[key].toString();
+
+        if (isMandatory && (!parameterValue || parameterValue === '')) {
+            throw new Error(`Parameter ${key} not provided.`);
+        }
+
+        return parameterValue;
     }
 
     async process() {
