@@ -1,6 +1,7 @@
 const url = require('url');
 const http = require('http');
 const ValidatorHelper = require('./helpers/validatorHelper');
+const ApiHandlerOutput = require("./apiHandlerOutput");
 
 class ApiHandlerBase {
 
@@ -44,6 +45,17 @@ class ApiHandlerBase {
         }
 
         return parameterValue;
+    }
+
+    /**
+    *
+    * @param {any} content
+    * @param {number} statusCode
+    * @param {string} contentType
+    * @param {boolean} cacheEnabled
+    */
+    getOutput(content, statusCode = 200, contentType = "application/json", cacheEnabled = false) {
+        return new ApiHandlerOutput(content, statusCode, contentType, cacheEnabled);
     }
 
     async process() {

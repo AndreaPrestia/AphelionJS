@@ -1,5 +1,4 @@
 const ApiHandlerBase = require("../apiHandlerBase");
-const ApiHandlerOutput = require("../apiHandlerOutput");
 const jwt = require("jsonwebtoken");
 
 class Jwt extends ApiHandlerBase {
@@ -12,7 +11,7 @@ class Jwt extends ApiHandlerBase {
             }
         );
 
-        return new ApiHandlerOutput(token);
+        return this.getOutput(token);
     }
 }
 
