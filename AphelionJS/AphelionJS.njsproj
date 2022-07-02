@@ -50,6 +50,9 @@
     <Content Include="api\secured.js">
       <SubType>Code</SubType>
     </Content>
+    <Content Include="entities\User.js">
+      <SubType>Code</SubType>
+    </Content>
     <Content Include="errors\resourceNotFoundError.js">
       <SubType>Code</SubType>
     </Content>
@@ -67,6 +70,7 @@
     <Folder Include="errors\" />
     <Folder Include="helpers\" />
     <Folder Include="api\" />
+    <Folder Include="entities\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\Node.js Tools\Microsoft.NodejsToolsV2.targets" />
   <ProjectExtensions>

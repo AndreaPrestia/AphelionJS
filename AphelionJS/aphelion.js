@@ -53,20 +53,14 @@ class Aphelion {
                 throw new ResourceNotFoundError(`Resource ${req.url} ${req.method} NOT found.`);
             }
 
-            if (!resource.isPublic) {
+            if (resource.claims) {
                 const tokenContent = this.#verifyToken(req);
-
-                const claimPath = this.#getElement('claimPath');
-
-                if (!claimPath) {
-                    throw new Error('claimPath not configured in aphelion.json');
-                }
 
                 if (!tokenContent[claimPath]) {
                     throw new SecurityError(`Invalid token structure. Claim ${claimPath} not found.`);
                 }
 
-                if (!tokenContent[claimPath].some(x => resource.roles.includes(x))) {
+                if (!Object.keys(tokenContent)?.some(x => Object.keys(resource.claims)?.includes(x))) {
                     throw new SecurityError(`Resource ${req.url} ${req.method} is NOT accessible.`);
                 }
             }

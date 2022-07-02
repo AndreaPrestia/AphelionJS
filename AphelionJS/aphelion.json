@@ -1,25 +1,23 @@
 {
   "serverKey": "ForzaSilvio666%$",
-  "claimPath": "roles",
   "rethrowOnError": true,
   "resources": [
     {
       "url": "/free",
       "method": "GET",
-      "class": "./api/free",
-      "isPublic": true
+      "class": "./api/free"
     },
     {
       "url": "/jwt",
       "method": "GET",
-      "class": "./api/jwt",
-      "isPublic": true
+      "class": "./api/jwt"
     },
     {
       "url": "/secured",
       "method": "GET",
-      "isPublic": false,
-      "roles": [ "users", "administrators" ],
+      "claims": {
+        "roles" : "users, administrators"
+      },
       "class": "./api/secured"
     }
   ]
