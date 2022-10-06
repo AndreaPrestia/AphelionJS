@@ -58,7 +58,7 @@ class ApiHandlerBase {
         return new ApiHandlerOutput(content, statusCode, contentType, cacheEnabled);
     }
 
-    async process() {
+    async process(req, ctx) {
         throw new Error('You have to implement the method process!');
     }
 }

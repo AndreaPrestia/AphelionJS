@@ -15,7 +15,7 @@ let _firstRun = true;
 
 class Aphelion {
     /**
-     * 
+     *
      * @param {number} port
      */
     useAphelion = (port) => http.createServer(async (req, res) => {
@@ -44,7 +44,7 @@ class Aphelion {
 
         let statusCode = 200;
 
-        let contentType = "application/json"
+        let contentType = "application/json";
 
         try {
             const resource = this.#getResource(req.url.split('?')[0], req.method);
@@ -53,29 +53,30 @@ class Aphelion {
                 throw new ResourceNotFoundError(`Resource ${req.url} ${req.method} NOT found.`);
             }
 
-            if (resource.claims) {
-                const tokenContent = this.#verifyToken(req);
-
-                if (!tokenContent[claimPath]) {
-                    throw new SecurityError(`Invalid token structure. Claim ${claimPath} not found.`);
-                }
-
-                if (!Object.keys(tokenContent)?.some(x => Object.keys(resource.claims)?.includes(x))) {
-                    throw new SecurityError(`Resource ${req.url} ${req.method} is NOT accessible.`);
-                }
-            }
-
             const api = require(resource.class);
 
             if (!api.prototype instanceof ApiHandlerBase) {
                 throw new Error(`Resource ${req.url} ${req.method} does not extends base class ApiHandlerBase.`);
             }
 
+            const apiContext = {
+                current: null
+            };
+            if (resource.claims) {
+                const tokenContent = this.#verifyToken(req);
+
+                if (!Object.keys(tokenContent)?.some(x => Object.keys(resource.claims)?.includes(x))) {
+                    throw new SecurityError(`Resource ${req.url} ${req.method} is NOT accessible.`);
+                }
+                
+                apiContext.current = tokenContent;
+            }
+
             const apiInstance = Object.create(api.prototype);
 
-            apiResult = await apiInstance.process(req);
+            apiResult = await apiInstance.process(req, apiContext);
 
-            if (!api.prototype instanceof ApiHandlerOutput) {
+            if (!apiResult.prototype instanceof ApiHandlerOutput) {
                 throw new Error('API result must be of type ApiHandlerOutput');
             }
 
@@ -84,8 +85,7 @@ class Aphelion {
             content = apiResult.Content;
 
             contentType = apiResult.ContentType;
-        }
-        catch (error) {
+        } catch (error) {
             if (error instanceof ResourceNotFoundError) {
                 statusCode = 404;
             } else if (error instanceof SecurityError) {
@@ -95,19 +95,16 @@ class Aphelion {
             }
 
             content = rethrowOnError ? error.message : 'An error has occurred :(';
-        }
-        finally {
-            res.writeHead(statusCode, { 'Content-Type': contentType });
+        } finally {
+            res.writeHead(statusCode, {'Content-Type': contentType});
             res.end(content);
         }
     }
 
     #loadConfiguration = () => {
-        const rawdata = fs.readFileSync('aphelion.json');
+        const rawData = fs.readFileSync('aphelion.json');
 
-        const configuration = JSON.parse(rawdata);
-
-        return configuration;
+        return JSON.parse(rawData);
     }
 
     #verifyToken = (req) => {
@@ -118,8 +115,7 @@ class Aphelion {
         }
 
         try {
-            const decoded = jwt.verify(token, this.#getElement('serverKey'));
-            return decoded;
+            return jwt.verify(token, this.#getElement('serverKey'));
         } catch (err) {
             throw new SecurityError('Invalid token');
         }

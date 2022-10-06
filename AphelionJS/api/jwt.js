@@ -2,7 +2,7 @@ const ApiHandlerBase = require("../apiHandlerBase");
 const jwt = require("jsonwebtoken");
 
 class Jwt extends ApiHandlerBase {
-    async process(req) {
+    async process(req, ctx) {
         const token = jwt.sign(
             { roles: ['users'] },
             "ForzaSilvio666%$",

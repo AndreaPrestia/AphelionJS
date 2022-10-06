@@ -1,7 +1,7 @@
 const ApiHandlerBase = require("../apiHandlerBase");
 
 class Free extends ApiHandlerBase {
-    async process(req) {
+    async process(req, ctx) {
         let body = await this.getBody(req);
 
         return this.getOutput(body);
