@@ -48,6 +48,26 @@ class ApiHandlerBase {
     }
 
     /**
+     *
+     * @param {http.IncomingMessage} req
+     * @param {string} key
+     * @param {boolean} isMandatory
+     */
+    getHeader(req, key, isMandatory = true) {
+        ValidatorHelper.validateObject(req, http.IncomingMessage.name);
+
+        ValidatorHelper.validateString(key);
+
+        const headerValue = req.headers[key];
+        
+        if (isMandatory && (!headerValue || headerValue === '')) {
+            throw new Error(`Header ${key} not provided.`);
+        }
+
+        return headerValue;
+    }
+
+    /**
     *
     * @param {any} content
     * @param {number} statusCode
