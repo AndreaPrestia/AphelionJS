@@ -93,6 +93,9 @@ class Aphelion {
             } else if (error instanceof SecurityError) {
                 statusCode = 403;
             }
+            else {
+                statusCode = 500;
+            }
 
             content = rethrowOnError ? error.message : 'An error has occurred :(';
         } finally {
