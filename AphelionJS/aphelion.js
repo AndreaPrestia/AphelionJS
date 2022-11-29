@@ -32,8 +32,6 @@ class Aphelion {
 
         _firstRun = false;
 
-        console.log('i am a conflict in master....');
-
         return resource;
     }
 
@@ -70,7 +68,7 @@ class Aphelion {
                 if (!Object.keys(tokenContent)?.some(x => Object.keys(resource.claims)?.includes(x))) {
                     throw new SecurityError(`Resource ${req.url} ${req.method} is NOT accessible.`);
                 }
-                
+
                 apiContext.current = tokenContent;
             }
 
@@ -92,8 +90,7 @@ class Aphelion {
                 statusCode = 404;
             } else if (error instanceof SecurityError) {
                 statusCode = 403;
-            }
-            else {
+            } else {
                 statusCode = 500;
             }
 
