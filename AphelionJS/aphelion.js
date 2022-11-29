@@ -30,11 +30,7 @@ class Aphelion {
             resource = _configuration.resources.find(x => x.url === url && x.method === method);
         }
 
-        console.log('I am a conflict in master...');
-
         _firstRun = false;
-
-        console.log('i am a conflict in develop....');
 
         return resource;
     }
