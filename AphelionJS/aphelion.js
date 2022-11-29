@@ -34,6 +34,8 @@ class Aphelion {
 
         _firstRun = false;
 
+        console.log('i am a conflict in develop....');
+
         return resource;
     }
 
