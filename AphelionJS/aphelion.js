@@ -32,6 +32,8 @@ class Aphelion {
 
         _firstRun = false;
 
+        console.log('Hello!');
+
         return resource;
     }
 
