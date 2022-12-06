@@ -32,7 +32,7 @@ class Aphelion {
 
         _firstRun = false;
 
-        console.log('Test')
+        console.log('Hi!')
 
         return resource;
     }
